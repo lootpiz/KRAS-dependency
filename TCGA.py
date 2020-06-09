@@ -61,6 +61,9 @@ tcga_paad_log10tpm_high_purity_mean = tcga_paad_log10tpm_high_purity.mean(axis=1
 # Calculate gene expression relative to mean for every gene (subtract sample log10(TPM) from average log10(TPM))
 tcga_paad_log10tpm_high_purity_ratio = tcga_paad_log10tpm_high_purity.subtract(tcga_paad_log10tpm_high_purity_mean, axis=0)
 
+# Save raw expression (TPM) values
+df = pd.DataFrame(data=tcga_paad_log10tpm_high_purity_ratio).T
+df.to_csv('TCGA_Raw_TPMs.csv')
 
 
 # Membership
@@ -83,6 +86,9 @@ s_dn = s_dn.replace({'TMEM237':'ALS2CR4'})
 # L-Score
 tcga_paad_high_purity_lscore = tcga_paad_log10tpm_high_purity_ratio.loc[l_up['Symbol']].mean().subtract(tcga_paad_log10tpm_high_purity_ratio.loc[l_dn['Symbol']].mean())
 
+lsdf = pd.DataFrame(data=tcga_paad_high_purity_lscore).T
+lsdf.to_csv('LScores.csv')
+
 # Plot bargraph of L-Score for each sample (samples sorted by L-Score)
 tcga_paad_high_purity_lscore.sort_values().plot.bar(width=0.8, figsize=(16, 6))
 plt.ylabel('L-Score', fontsize=20)
@@ -92,6 +98,9 @@ plt.tick_params(axis='y', labelsize=16)
 
 # S-Score
 tcga_paad_high_purity_sscore = tcga_paad_log10tpm_high_purity_ratio.loc[s_up['Symbol']].mean().subtract(tcga_paad_log10tpm_high_purity_ratio.loc[s_dn['Symbol']].mean())
+
+ssdf = pd.DataFrame(data=tcga_paad_high_purity_sscore).T
+ssdf.to_csv('SScores.csv')
 
 # Plot bar-chart of L-Score for each sample (samples sorted by L-Score)
 tcga_paad_high_purity_sscore.sort_values().plot.bar(width=0.8, figsize=(16, 6))
